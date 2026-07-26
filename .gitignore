@@ -1,0 +1,34 @@
+# --- personal practice state (never shared) ---
+# your own score log; start a fresh one from templates/scores.md
+# (root-anchored so the templates/ copy still ships)
+/scores.md
+# solutions you kept for post-mortems
+reference/
+# which problem you're on
+problems/.current
+# per-problem and contest timers
+**/.started_at
+# the contest you're currently running
+contest/meta.txt
+contest/.count
+
+# --- local tooling / editor state ---
+.claude/
+.claude.json
+.vscode/
+.idea/
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- os cruft ---
+.DS_Store
+Thumbs.db
+desktop.ini
