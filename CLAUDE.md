@@ -55,7 +55,10 @@ in-scope table, and never make an out-of-scope technique the only way to pass.
    clock (`python judge.py hold`); if so, remove the timer and only restart it when they
    say "start" (`python judge.py start`).
 4. **They write `solution.py`** in the problem's working folder (see structure below). It
-   starts out as the starter template from `templates/solution.py`.
+   starts out as the starter template from `templates/solution.py`. Keep that template
+   **bare** — an empty `solve()` and the `__main__` guard, and nothing else. No
+   `sys.stdin` reads, no n/array parsing: reading the input format is part of the
+   exercise, and pre-filled parsing gets in the way.
 5. **`run`** → you execute solution.py against both sample inputs, show actual vs expected
    output, diff on mismatch. No hidden tests run at this stage.
 6. **`submit`** → you run against all 10 hidden test cases (see below), report:
