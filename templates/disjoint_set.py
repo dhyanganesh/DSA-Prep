@@ -14,11 +14,13 @@ Nodes are 0..n: the constructor allocates n + 1 slots, so both 0-indexed and
 Complexity: every find / union is O(alpha(n)) amortised (inverse Ackermann,
 effectively constant) once path compression and union by rank/size are combined.
 
-Note on recursion: find() recurses down the parent chain. Union by rank/size
-keeps trees shallow, so depth stays tiny in practice, but if you ever build long
-chains WITHOUT unioning, bump the limit first:
-    import sys; sys.setrecursionlimit(1 << 20)
-(or rewrite find() iteratively).
+Two find() variants are provided:
+  - recursive + full path compression (active by default, matches Striver)
+  - iterative path-halving (commented out, just below the recursive one) - no
+    recursion, so it can't hit Python's stack limit on a deep chain. Swap it in
+    when needed.
+If you keep the recursive one and ever build long chains WITHOUT unioning, bump
+the limit first:  import sys; sys.setrecursionlimit(1 << 20)
 """
 
 
@@ -36,6 +38,17 @@ class DisjointSet:
         # recurse to the root, then compress: point `node` straight at the root
         self.parent[node] = self.find(self.parent[node])
         return self.parent[node]
+
+    # --- iterative alternative: path halving (no recursion) ----------------
+    # Same amortised cost as the recursive find with union by rank/size, but uses
+    # O(1) stack, so it can't overflow on a deep chain. To switch, comment out the
+    # recursive find() above and uncomment this one (same name, drop-in):
+    #
+    # def find(self, node):
+    #     while node != self.parent[node]:
+    #         self.parent[node] = self.parent[self.parent[node]]  # point at grandparent
+    #         node = self.parent[node]
+    #     return node
 
     def connected(self, u, v):
         """True if u and v are already in the same set."""
@@ -79,3 +92,6 @@ if __name__ == "__main__":
     for a, b in [(1, 2), (2, 3), (4, 5), (6, 7), (5, 6)]:
         ds2.union_by_size(a, b)
     print("size of 3's component:", ds2.size[ds2.find(3)])             # 3
+    print("3 & 7 connected?", "Yes" if ds2.connected(3, 7) else "No")   # No
+    ds2.union_by_size(3, 7)
+    print("3 & 7 connected?", "Yes" if ds2.connected(3, 7) else "No") 
